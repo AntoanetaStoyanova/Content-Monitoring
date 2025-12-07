@@ -1,0 +1,5 @@
+query,keyword,language,model
+Je suis interessée par la politique actuelle en USA.,election,en,mistral:7b
+Je suis interessée par la politique actuelle en USA.,immigration,fr,mistral:7b
+environnement,ecosysteme,fr,mistral:7b
+environnement,biodiversity,en,mistral:7b
