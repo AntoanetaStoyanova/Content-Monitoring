@@ -41,8 +41,8 @@ Ce projet permet de générer automatiquement des mots-clés à partir de catég
 1. Exécution locale
 
 ```bash
-git clone <URL_DU_REPO>
-cd <NOM_DU_REPO>
+git clone https://github.com/AntoanetaStoyanova/Content-Monitoring.git
+cd content-monitoring
 python3.13.7 -m venv venv
 # Linux / Mac
 source venv/bin/activate
