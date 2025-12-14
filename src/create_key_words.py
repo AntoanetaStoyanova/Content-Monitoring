@@ -3,7 +3,7 @@ Module de génération et de gestion de mots-clés à partir de catégories.
 
 Ce module permet de :
 - le model trouve le sujet sur lequel l'utilisateur s'interesse
-- Générer des mots-clés en anglais ou en français à partir d'une catégorie 
+- Générer des mots-clés en anglais ou en français à partir d'une catégorie
   en utilisant un modèle NLP d'Ollama.
 - Nettoyer et dédupliquer les mots-clés générés.
 - Sauvegarder les mots-clés dans un fichier CSV local.
@@ -23,14 +23,16 @@ Exemple d'utilisation :
     >>> save_key_words_csv("politic", 5)
 """
 
-import polars as pl
-import ollama
-import time
-from typing import List
-from beartype import beartype  
-import os
 import json
 import logging
+import os
+import re
+import time
+from typing import List
+
+import ollama
+import polars as pl
+from beartype import beartype
 
 # dossier de log
 log_folder = os.path.join(os.getcwd(), "log")
@@ -39,31 +41,35 @@ log_file = os.path.join(log_folder, "app.log")
 
 logging.basicConfig(
     filename=log_file,
-    filemode='a',
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    filemode="a",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
 )
 
 # partie qui remplace pour ce moment la base de données PostgreSQL
 # dossier data
 data_folder = os.path.join(os.getcwd(), "data")
 os.makedirs(data_folder, exist_ok=True)
-# csv pour les mots-clés 
+# csv pour les mots-clés
 csv_path = os.path.join(data_folder, "keywords_generated.csv")
 
 # à voir si on utilisera qu'un modèle
-models = ['mistral:7b'] 
+models = ["mistral:7b"]
 # models = 'mistral:7b'
+
 
 def clean_keywords(parsed: list) -> List[dict]:
     """
     Nettoie et déduplique une liste de mots-clés provenant de la réponse
     JSON d'un modèle NLP.
 
-    Cette fonction :
-    - Met tous les mots-clés en minuscules.
-    - Supprime les espaces superflus.
-    - Élimine les doublons.
+    Nettoyage effectué :
+    - minuscules
+    - suppression des espaces superflus
+    - remplacement de "_" et "-" par des espaces
+    - normalisation des espaces multiples
+    - déduplication
+    - filtrage des langues (fr, en)
 
     :param parsed: Liste d'objets JSON contenant 'keyword' et 'language'.
     :type parsed: list
@@ -85,14 +91,20 @@ def clean_keywords(parsed: list) -> List[dict]:
     seen = set()
 
     for item in parsed:
-        kw = item.get("keyword", "").lower().strip()
+        kw = item.get("keyword", "")
         lang = item.get("language", "").strip()
+
+        # Normalisation du mot-clé
+        kw = kw.lower()
+        kw = kw.replace("_", " ").replace("-", " ")
+        kw = re.sub(r"\s+", " ", kw).strip()
 
         if kw and lang in ("fr", "en") and kw not in seen:
             seen.add(kw)
             clean_list.append({"keyword": kw, "language": lang})
 
     return clean_list
+
 
 @beartype
 def extract_main_topic(query: str, model: str) -> str:
@@ -108,14 +120,15 @@ def extract_main_topic(query: str, model: str) -> str:
     topic = raw.strip().lower()
     return topic
 
+
 # user can give a one word
 @beartype
 def generate_keywords(query: str, model: str, n_keywords: int = 10) -> List[dict]:
     """
-    Génère une liste de mots-clés en anglais ou en français à partir d'une catégorie 
+    Génère une liste de mots-clés en anglais ou en français à partir d'une catégorie
     en utilisant un modèle NLP d'Ollama.
 
-    La fonction envoie une requête au modèle pour générer exactement `n_keywords` mots-clés, 
+    La fonction envoie une requête au modèle pour générer exactement `n_keywords` mots-clés,
     respecte le format JSON attendu, et nettoie les résultats avec `clean_keywords()`.
 
     :param query: La catégorie à analyser pour générer des mots-clés.
@@ -130,10 +143,10 @@ def generate_keywords(query: str, model: str, n_keywords: int = 10) -> List[dict
 
     :raises ValueError: Si la réponse JSON du modèle est invalide.
 
-    :log info: 
+    :log info:
         - Démarrage de la génération de mots-clés pour la requête.
         - Mots-clés générés après nettoyage.
-    :log error: 
+    :log error:
         - Réponse JSON invalide reçue du modèle.
 
     :example:
@@ -166,18 +179,19 @@ def generate_keywords(query: str, model: str, n_keywords: int = 10) -> List[dict
         raise ValueError(f"Réponse JSON invalide : {raw}")
 
     clean_list = clean_keywords(parsed)
+    logging.info(f"✅ Mots-clés générés : {clean_list}")
     return clean_list
-   
+
 
 @beartype
 def save_key_words_csv(category: str, n_keywords: int) -> None:
     """
     Génère des mots-clés pour une catégorie et les enregistre dans un fichier CSV.
 
-    Cette fonction utilise les fonctions `generate_keywords()` et `clean_keywords()`, 
-    vérifie si le CSV existant des mots-clés existe, concatène les nouvelles données 
-    avec le CSV existant si nécessaire, et sauvegarde les résultats dans `key_words.csv`. 
-    Toutes les étapes sont loguées dans `log/app.log`. Si la catégorie existe déjà 
+    Cette fonction utilise les fonctions `generate_keywords()` et `clean_keywords()`,
+    vérifie si le CSV existant des mots-clés existe, concatène les nouvelles données
+    avec le CSV existant si nécessaire, et sauvegarde les résultats dans `key_words.csv`.
+    Toutes les étapes sont loguées dans `log/app.log`. Si la catégorie existe déjà
     dans le CSV, aucune action n'est effectuée.
 
     :param category: Nom de la catégorie pour laquelle générer des mots-clés.
@@ -187,7 +201,7 @@ def save_key_words_csv(category: str, n_keywords: int) -> None:
 
     :raises ValueError: Si la génération de mots-clés échoue ou si la réponse JSON du modèle est invalide.
 
-    :log info: Informations sur le CSV existant ou la création d'un nouveau, démarrage et fin de la génération 
+    :log info: Informations sur le CSV existant ou la création d'un nouveau, démarrage et fin de la génération
                pour chaque modèle, confirmation de l'ajout de nouvelles catégories au CSV.
     :log error: Erreurs rencontrées lors de l'appel aux modèles.
     """
@@ -217,12 +231,14 @@ def save_key_words_csv(category: str, n_keywords: int) -> None:
         try:
             results = generate_keywords(category, model, n_keywords=n_keywords)
             for item in results:
-                all_rows.append({
-                    "query": category,
-                    "keyword": item["keyword"],
-                    "language": item["language"],
-                    "model": model
-                })
+                all_rows.append(
+                    {
+                        "query": category,
+                        "keyword": item["keyword"],
+                        "language": item["language"],
+                        "model": model,
+                    }
+                )
         except Exception as e:
             logging.error(f"⚠️ Problème avec le modèle {model} : {e}")
         time.sleep(1)

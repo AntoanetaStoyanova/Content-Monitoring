@@ -1,31 +1,26 @@
-import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Dict, List
-
-import polars as pl
 from atproto import Client
-from beartype import beartype
-from dotenv import load_dotenv
-
+import os
+import polars as pl
 from create_key_words import save_key_words_csv
+from beartype import beartype
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List, Dict
 
+from dotenv import load_dotenv
 load_dotenv()
-
 
 data_folder = os.path.join(os.getcwd(), "data")
 os.makedirs(data_folder, exist_ok=True)
 collect_post_csv_path = os.path.join(data_folder, "collected_post.csv")
 key_words_csv_path = os.path.join(data_folder, "keywords_generated.csv")
 
-# il faut créer .env
+# il faut créer .env 
 USERNAME_BLUESKY = os.getenv("USERNAME_BLUESKY")
 PASSWORD_BLUESKY = os.getenv("PASSWORD_BLUESKY")
 
 
 @beartype
-def collect_bluesky_posts(
-    category: str, n_keywords: int, username: str, password: str, n_post: int
-) -> List[Dict[str, str]]:
+def collect_bluesky_posts(category: str, n_keywords: int, username: str, password: str, n_post: int) -> List[Dict[str, str]]:
     """
     Collecte des posts sur Bluesky contenant des mots-clés générés pour une catégorie donnée.
 
@@ -69,7 +64,6 @@ def collect_bluesky_posts(
     save_key_words_csv(category=category, n_keywords=n_keywords)
     # récupérer les mots clés
     df_mot_cles = pl.read_csv(key_words_csv_path)
-    df_mot_cles = df_mot_cles.tail(n_keywords)
     list_mot_cles = df_mot_cles["keyword"].to_list()
 
     # identifiants account Bluesky
@@ -82,33 +76,33 @@ def collect_bluesky_posts(
     def fetch_posts(mot_cle):
         try:
             res = client.app.bsky.feed.search_posts(
-                params={"q": mot_cle, "limit": n_post}
+                params={
+                    "q": mot_cle,
+                    "limit": n_post
+                }
             )
-
+        
             # récupérer les posts pour le mot_clé
             posts = res.posts
-            result = [
-                {
-                    "mot_cle": mot_cle,
-                    "auteur": post.author.handle if post.author else None,
-                    "texte": post.record.text if post.record else None,
-                }
-                for post in posts
-            ]
+            result = [{
+                "mot_cle": mot_cle,
+                "auteur": post.author.handle if post.author else None,
+                "texte": post.record.text if post.record else None
+            } for post in posts]
             print(f"[INFO] {len(posts)} posts trouvés pour '{mot_cle}'")
             return result
         except Exception as e:
             print(f"[ERREUR] Mot-clé '{mot_cle}': {e}")
             return []
-
+        
     # Utilisation de threads pour accélérer la collecte
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = [executor.submit(fetch_posts, mot_cle) for mot_cle in list_mot_cles]
         for future in as_completed(futures):
             all_posts.extend(future.result())
-
+        
+      
     return all_posts
-
 
 @beartype
 def save_posts_csv(category: str, n_keywords: int, n_post: int = 10):
@@ -134,15 +128,16 @@ def save_posts_csv(category: str, n_keywords: int, n_post: int = 10):
         >>> save_posts_csv("politique", 5, 10)
         # Le fichier CSV 'collect_post_csv_path' est créé ou mis à jour avec les posts collectés.
     """
-    all_posts = collect_bluesky_posts(
-        category, n_keywords, USERNAME_BLUESKY, PASSWORD_BLUESKY, n_post
-    )
+    all_posts = collect_bluesky_posts(category, n_keywords, USERNAME_BLUESKY, PASSWORD_BLUESKY, n_post)
     # Convertir en DataFrame pour analyse ou export
     df_posts = pl.DataFrame(all_posts)
     df_posts.write_csv(collect_post_csv_path)
 
 
+
+
 if __name__ == "__main__":
-    category = "L'augmentation du SMIC"
-    n_keywords = 10
-    save_posts_csv(category=category, n_keywords=n_keywords, n_post=10)
+    
+    category = "environnement"
+    n_keywords = 2
+    save_posts_csv(category=category, n_keywords=n_keywords, n_post=2)
