@@ -1,5 +1,6 @@
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import timezone
 from typing import Dict, List
 
 import polars as pl
@@ -27,14 +28,14 @@ def collect_bluesky_posts(
     category: str, n_keywords: int, username: str, password: str, n_post: int
 ) -> List[Dict[str, str]]:
     """
-    Collecte des posts sur Bluesky contenant des mots-clés générés pour une catégorie donnée.
+    Collecte des posts depuis Bluesky contenant des mots-clés générés pour une
+    catégorie donnée.
 
-    Cette fonction :
-    - Génère des mots-clés pour la catégorie via `save_key_words_csv`.
-    - Récupère les mots-clés depuis le CSV local.
+    La fonction :
+    - Génère des mots-clés via `save_key_words_csv`.
+    - Lit les mots-clés générés correspondant à l'utilisateur.
     - Se connecte à un compte Bluesky avec les identifiants fournis.
-    - Recherche les posts contenant chaque mot-clé.
-    - Retourne la liste complète des posts trouvés.
+    - Recherche des posts contenant chaque mot-clé.
 
     :param category: Nom de la catégorie pour laquelle générer et rechercher des posts.
     :type category: str
@@ -47,61 +48,89 @@ def collect_bluesky_posts(
     :param n_post: Nombre maximum de posts à récupérer par mot-clé.
     :type n_post: int
 
-    :returns: Liste de dictionnaires contenant les informations des posts.
-              Chaque dictionnaire contient les clés suivantes :
-              - 'mot_cle' : le mot-clé utilisé pour la recherche.
-              - 'auteur' : le handle de l'auteur du post.
-              - 'texte' : le contenu textuel du post.
-    :rtype: List[dict]
+    :return: Liste de dictionnaires représentant les posts.
+    :rtype: List[Dict[str, str]]
 
-    :log info: Informations sur le nombre de posts trouvés pour chaque mot-clé.
-    :log error: Erreurs survenues lors de la récupération des posts pour un mot-clé.
+    :raises Exception: Si une erreur se produit lors de la récupération des posts.
+
+    .. note::
+        La récupération de la date réelle dépend de la disponibilité du champ `createdAt`
+        dans le record du post. Si le SDK ne fournit pas cette information, la date est
+        générée automatiquement au moment du scraping.
 
     :example:
-        >>> posts = collect_bluesky_posts("politique", 5, "mon_user", "mon_mdp", 10)
-        >>> len(posts)
-        42
-        >>> posts[0]
-        {'mot_cle': 'gouvernement', 'auteur': 'user123', 'texte': 'Le gouvernement annonce...'}
+
+    >>> posts = collect_bluesky_posts("technologie", 3, "mon_user", "mon_mdp", 5)
+    >>> len(posts) <= 15
+    True
+    >>> posts[0].keys()
+    dict_keys(['mot_cle', 'auteur', 'texte', 'date'])
+    >>> isinstance(posts[0]['date'], str)
+    True
     """
 
-    # générer des mots clés
+    # Générer des mots clés
     save_key_words_csv(category=category, n_keywords=n_keywords)
-    # récupérer les mots clés
-    df_mot_cles = pl.read_csv(key_words_csv_path)
-    df_mot_cles = df_mot_cles.tail(n_keywords)
+
+    # Lire que les mots-clés qui provient d'user query
+    df_mot_cles = pl.read_csv(key_words_csv_path).tail(n_keywords)
     list_mot_cles = df_mot_cles["keyword"].to_list()
 
-    # identifiants account Bluesky
+    # Connexion Bluesky
     client = Client()
     client.login(username, password)
 
     all_posts = []
 
-    # Recherche des posts contenant les mots-clés
     def fetch_posts(mot_cle):
         try:
             res = client.app.bsky.feed.search_posts(
                 params={"q": mot_cle, "limit": n_post}
             )
-
-            # récupérer les posts pour le mot_clé
             posts = res.posts
-            result = [
-                {
-                    "mot_cle": mot_cle,
-                    "auteur": post.author.handle if post.author else None,
-                    "texte": post.record.text if post.record else None,
-                }
-                for post in posts
-            ]
+            result = []
+
+            for post in posts:
+                texte = post.record.text if post.record else None
+                auteur = post.author.handle if post.author else None
+                created_at = None
+
+                # Récupérer le record brut si disponible
+                try:
+                    if post.record:
+                        record_dict = getattr(
+                            post.record, "model_dump", lambda: post.record
+                        )()
+                        # Essayer createdAt
+                        created_at = record_dict.get("createdAt") or record_dict.get(
+                            "created_at"
+                        )
+                except Exception:
+                    created_at = None
+
+                # Si aucune date, créer la date au moment du scraping
+                if not created_at:
+                    from datetime import datetime
+
+                    created_at = datetime.now(timezone.utc).isoformat()
+
+                result.append(
+                    {
+                        "mot_cle": mot_cle,
+                        "auteur": auteur,
+                        "texte": texte,
+                        "date": created_at,
+                    }
+                )
+
             print(f"[INFO] {len(posts)} posts trouvés pour '{mot_cle}'")
             return result
+
         except Exception as e:
             print(f"[ERREUR] Mot-clé '{mot_cle}': {e}")
             return []
 
-    # Utilisation de threads pour accélérer la collecte
+    # Multithreading pour accélérer
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = [executor.submit(fetch_posts, mot_cle) for mot_cle in list_mot_cles]
         for future in as_completed(futures):
@@ -143,6 +172,6 @@ def save_posts_csv(category: str, n_keywords: int, n_post: int = 10):
 
 
 if __name__ == "__main__":
-    category = "L'augmentation du SMIC"
+    category = "Caisse d'épargne"
     n_keywords = 10
     save_posts_csv(category=category, n_keywords=n_keywords, n_post=10)
