@@ -1,0 +1,31 @@
+[project]
+name = "content-monitoring"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "atproto>=0.0.65",
+    "beartype>=0.22.9",
+    "ollama>=0.6.1",
+    "polars>=1.36.1",
+    "python-dotenv>=1.2.1"
+]
+
+
+# -------------------------------
+# Configuration Ruff
+# -------------------------------
+[tool.ruff]
+fix = true
+line-length = 66
+select = ["E", "F", "W", "I"]
+extend-select = ["E301", "E302", "E303"]
+ignore = ["E203", "W503"]
+organize-imports = true
+unused-ignores = false
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.9",
+]
