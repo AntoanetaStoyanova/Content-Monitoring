@@ -1,28 +1,3 @@
-"""
-Module de génération et de gestion de mots-clés à partir de catégories.
-
-Ce module permet de :
-- le model trouve le sujet sur lequel l'utilisateur s'interesse
-- Générer des mots-clés en anglais ou en français à partir d'une catégorie
-  en utilisant un modèle NLP d'Ollama.
-- Nettoyer et dédupliquer les mots-clés générés.
-- Sauvegarder les mots-clés dans un fichier CSV local.
-- Logger toutes les opérations (création de fichiers, erreurs, succès)
-  dans 'log/app.log'.
-
-Fonctions principales :
-- clean_keywords(parsed: list) -> List[dict] : Nettoie et déduplique une liste
-  de mots-clés JSON.
-- generate_keywords(query: str, model: str, n_keywords: int = 10) -> List[str] :
-    Génère une liste de mots-clés pour une catégorie donnée via un modèle NLP.
-- save_key_words_csv(category: str, n_keywords: int) -> None :
-    Génère des mots-clés pour une catégorie et les enregistre dans un CSV,
-    en évitant les doublons.
-
-Exemple d'utilisation :
-    >>> save_key_words_csv("politic", 5)
-"""
-
 import json
 import logging
 import os
