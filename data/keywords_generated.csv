@@ -1,41 +1,149 @@
 query,keyword,language,model
-gouvernement bulgare manifestation,bulgarian demonstration,en,mistral:7b
-gouvernement bulgare manifestation,manifestation bulgare,fr,mistral:7b
-gouvernement bulgare manifestation,bulgarien proteste,fr,mistral:7b
-gouvernement bulgare manifestation,demonstration bulgare,fr,mistral:7b
-gouvernement bulgare manifestation,bulgarian protest,en,mistral:7b
-gouvernement bulgare manifestation,manifestation bulgaire,fr,mistral:7b
-gouvernement bulgare manifestation,bulgare manifestation protest,fr,mistral:7b
-gouvernement bulgare manifestation,bulgarian unrest,en,mistral:7b
-gouvernement bulgare manifestation,demonstration bulgaire politique,fr,mistral:7b
-gouvernement bulgare manifestation,protest bulgare,en,mistral:7b
-l'âge de la retraite en France,âge de la retraite française,fr,mistral:7b
-l'âge de la retraite en France,pension age france,en,mistral:7b
-l'âge de la retraite en France,régime général,fr,mistral:7b
-l'âge de la retraite en France,contribution sociale généralisée,en,mistral:7b
-l'âge de la retraite en France,pension de retraite,fr,mistral:7b
-l'âge de la retraite en France,french retirement age,en,mistral:7b
-l'âge de la retraite en France,plafond de cotisation,fr,mistral:7b
-l'âge de la retraite en France,social security contributions ceiling,en,mistral:7b
-l'âge de la retraite en France,âge minimum de la retraite,fr,mistral:7b
-l'âge de la retraite en France,minimum retirement age,en,mistral:7b
-L'augmentation du SMIC,minimum wage increase,en,mistral:7b
-L'augmentation du SMIC,salaire minimum augmenté,fr,mistral:7b
-L'augmentation du SMIC,interprofessionnel minimum wage hike,en,mistral:7b
-L'augmentation du SMIC,augmentation du salaire minimum interprofessionnel,fr,mistral:7b
-L'augmentation du SMIC,wage growth,en,mistral:7b
-L'augmentation du SMIC,croissance des salaires,fr,mistral:7b
-L'augmentation du SMIC,minimum wage reform,en,mistral:7b
-L'augmentation du SMIC,réforme du salaire minimum,fr,mistral:7b
-L'augmentation du SMIC,living wage,en,mistral:7b
-L'augmentation du SMIC,salaire vital,fr,mistral:7b
-Caisse d'épargne,caisse d'épargne,fr,mistral:7b
-Caisse d'épargne,société mutuelle,fr,mistral:7b
-Caisse d'épargne,epargne,fr,mistral:7b
-Caisse d'épargne,savings bank,en,mistral:7b
-Caisse d'épargne,french savings bank,en,mistral:7b
-Caisse d'épargne,mutual savings institution,en,mistral:7b
-Caisse d'épargne,financial institution,en,mistral:7b
-Caisse d'épargne,saving account,en,mistral:7b
-Caisse d'épargne,epargne en banque,fr,mistral:7b
-Caisse d'épargne,épargner en banque,fr,mistral:7b
+000.,gouvernement francais,fr,mistral:7b
+gouvernement français,government de france,en,mistral:7b
+gouvernement français,élysée palace,fr,mistral:7b
+gouvernement français,palais de l'elysee,en,mistral:7b
+gouvernement français,président de la république française,fr,mistral:7b
+gouvernement français,president of the french republic,en,mistral:7b
+gouvernement français,parlement français,fr,mistral:7b
+gouvernement français,french parliament,en,mistral:7b
+gouvernement français,assemblée nationale française,fr,mistral:7b
+gouvernement français,national assembly of france,en,mistral:7b
+gouvernement français,senat français,fr,mistral:7b
+gouvernement français,french senate,en,mistral:7b
+gouvernement français,conseil des ministres français,fr,mistral:7b
+gouvernement français,council of ministers of france,en,mistral:7b
+gouvernement français,politique française,fr,mistral:7b
+gouvernement français,french politics,en,mistral:7b
+gouvernement français,réforme gouvernementale française,fr,mistral:7b
+gouvernement français,french governmental reform,en,mistral:7b
+gouvernement français,loi de programmation militaire,fr,mistral:7b
+gouvernement français,defense budget law,en,mistral:7b
+gouvernement français,affaires étrangères françaises,fr,mistral:7b
+gouvernement français,french foreign affairs,en,mistral:7b
+politique international,diplomatie,fr,mistral:7b
+politique international,politique étrangère,fr,mistral:7b
+politique international,foreign policy,en,mistral:7b
+politique international,affaires étrangères,fr,mistral:7b
+politique international,international relations,en,mistral:7b
+politique international,négociations diplomatiques,fr,mistral:7b
+politique international,bilateral relations,en,mistral:7b
+politique international,coopération internationale,fr,mistral:7b
+politique international,multilateralism,en,mistral:7b
+politique international,politique de sécurité nationale,fr,mistral:7b
+politique international,national security policy,en,mistral:7b
+politique international,traite international,fr,mistral:7b
+politique international,international treaty,en,mistral:7b
+politique international,sanctions économiques,fr,mistral:7b
+politique international,economic sanctions,en,mistral:7b
+politique international,politique de défense,fr,mistral:7b
+politique international,defence policy,en,mistral:7b
+politique international,politique économique,fr,mistral:7b
+politique international,economic policy,en,mistral:7b
+politique international,politique de développement,fr,mistral:7b
+politique international,development policy,en,mistral:7b
+news,actualité,fr,mistral:7b
+news,journaux,fr,mistral:7b
+news,nouvelles,fr,mistral:7b
+news,journalisme,fr,mistral:7b
+news,breaking news,en,mistral:7b
+news,headlines,en,mistral:7b
+news,top stories,en,mistral:7b
+news,media,en,mistral:7b
+news,news agencies,en,mistral:7b
+news,press,en,mistral:7b
+news,current affairs,en,mistral:7b
+news,reporting,en,mistral:7b
+news,investigative journalism,en,mistral:7b
+news,editorial,en,mistral:7b
+news,opinion,en,mistral:7b
+news,political news,en,mistral:7b
+news,sports news,en,mistral:7b
+news,entertainment news,en,mistral:7b
+news,business news,en,mistral:7b
+news,science news,en,mistral:7b
+art,art,fr,mistral:7b
+art,beaux arts,fr,mistral:7b
+art,painting,en,mistral:7b
+art,sculpture,en,mistral:7b
+art,drawing,en,mistral:7b
+art,graphic design,en,mistral:7b
+art,photography,en,mistral:7b
+art,architecture,en,mistral:7b
+art,performing arts,en,mistral:7b
+art,music,en,mistral:7b
+art,dance,en,mistral:7b
+art,theater,en,mistral:7b
+art,cinema,fr,mistral:7b
+art,film,en,mistral:7b
+art,literature,en,mistral:7b
+art,pure and applied arts,fr,mistral:7b
+art,fine arts,en,mistral:7b
+art,applied art,en,mistral:7b
+art,contemporary art,en,mistral:7b
+art,modern art,en,mistral:7b
+social protests,social protests,en,mistral:7b
+social protests,protests sociaux,fr,mistral:7b
+social protests,civil disobedience,en,mistral:7b
+social protests,manifestation,fr,mistral:7b
+social protests,demonstration,en,mistral:7b
+social protests,strike,en,mistral:7b
+social protests,grève,fr,mistral:7b
+social protests,protest movements,en,mistral:7b
+social protests,mouvements de protestation,fr,mistral:7b
+social protests,political protests,en,mistral:7b
+social protests,protestations politiques,fr,mistral:7b
+social protests,civil rights protests,en,mistral:7b
+social protests,manifestations pour les droits civils,fr,mistral:7b
+social protests,social justice protests,en,mistral:7b
+social protests,protests pour la justice sociale,fr,mistral:7b
+social protests,student protests,en,mistral:7b
+social protests,protestations étudiantes,fr,mistral:7b
+social protests,climate change protests,en,mistral:7b
+social protests,manifestations pour le changement climatique,fr,mistral:7b
+social protests,peaceful protests,en,mistral:7b
+social protests,protestations pacifiques,fr,mistral:7b
+art contemporaine,contemporary art,en,mistral:7b
+art contemporaine,art moderne,fr,mistral:7b
+art contemporaine,installation art,en,mistral:7b
+art contemporaine,performance art,en,mistral:7b
+art contemporaine,street art,en,mistral:7b
+art contemporaine,body art,en,mistral:7b
+art contemporaine,conceptual art,en,mistral:7b
+art contemporaine,digital art,en,mistral:7b
+art contemporaine,abstract art,en,mistral:7b
+art contemporaine,contemporary sculpture,en,mistral:7b
+art contemporaine,pop art,en,mistral:7b
+art contemporaine,minimalism,en,mistral:7b
+art contemporaine,postmodern art,en,mistral:7b
+art contemporaine,land art,en,mistral:7b
+art contemporaine,neo expressionism,en,mistral:7b
+art contemporaine,graffiti art,en,mistral:7b
+art contemporaine,video art,en,mistral:7b
+art contemporaine,performance art contemporaine,fr,mistral:7b
+aide sociale,social assistance,en,mistral:7b
+aide sociale,aide sociale,fr,mistral:7b
+aide sociale,welfare,en,mistral:7b
+aide sociale,assistance sociale,fr,mistral:7b
+aide sociale,social services,en,mistral:7b
+aide sociale,services sociaux,fr,mistral:7b
+aide sociale,public aid,en,mistral:7b
+aide sociale,aide publique,fr,mistral:7b
+aide sociale,social security,en,mistral:7b
+aide sociale,securité sociale,fr,mistral:7b
+aide sociale,unemployment benefits,en,mistral:7b
+aide sociale,allocations chômage,fr,mistral:7b
+aide sociale,disability benefits,en,mistral:7b
+aide sociale,allocations handicap,fr,mistral:7b
+aide sociale,housing assistance,en,mistral:7b
+aide sociale,aide à l'habitat,fr,mistral:7b
+aide sociale,food assistance,en,mistral:7b
+aide sociale,aide alimentaire,fr,mistral:7b
+aide sociale,family assistance,en,mistral:7b
+aide sociale,aide à la famille,fr,mistral:7b
+aide sociale,child support,en,mistral:7b
+aide sociale,allocations familiales,fr,mistral:7b
+butterfly,papillon,fr,mistral:7b
+butterfly,butterfly,en,mistral:7b
+animals,animaux,fr,mistral:7b
+animals,animals,en,mistral:7b

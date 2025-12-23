@@ -1,7 +1,7 @@
 from atproto import Client
 import os
 import polars as pl
-from create_key_words import save_key_words_csv
+from bin.create_key_words import save_key_words_csv
 from beartype import beartype
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Dict

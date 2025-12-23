@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      # --- VARIABLES REQUISES PAR L'IMAGE POSTGRES (à GAUCHE) ---
+      POSTGRES_USER: ${DB_USER}       
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}       # ✅ Correct : Utilise votre DB_NAME pour créer la base
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"] 
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # --- VOS VARIABLES POUR LE CODE PYTHON (à GAUCHE) ---
+      DB_HOST: db                  # L'hôte est le nom du service 'db'
+      DB_PORT: 5432                
+      DB_NAME: ${DB_NAME}          # ✅ Correct : Python lira os.getenv("DB_NAME")
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      
+      USERNAME_BLUESKY: ${USERNAME_BLUESKY}
+      PASSWORD_BLUESKY: ${PASSWORD_BLUESKY}
+      
+    volumes:
+      - .:/app
+    command: python main.py
