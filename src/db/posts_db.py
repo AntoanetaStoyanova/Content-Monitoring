@@ -5,7 +5,7 @@ import sys
 from beartype import beartype
 from dotenv import load_dotenv
 
-from db_postgresql.postgresql_connector import get_connection
+from db.postgresql_connector import get_connection
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from bin.collect_posts import collect_bluesky_posts
