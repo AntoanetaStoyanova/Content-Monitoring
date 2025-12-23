@@ -9,8 +9,8 @@ from atproto import Client
 from beartype import beartype
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from db_postgresql.categories_keywords import save_key_words_db
-from db_postgresql.postgresql_connector import get_connection
+from db.categories_keywords import save_key_words_db
+from db.postgresql_connector import get_connection
 
 UTC = UTC
 models = ["mistral:7b"]
