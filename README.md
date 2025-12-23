@@ -76,3 +76,14 @@ PASSWORD_BLUESKY=<votre_password>
 
 
 
+https://www.kaggle.com/datasets/emineyetm/fake-news-detection-datasets
+https://www.kaggle.com/datasets?search=fake+news
+
+
+je scrappe au fur et à mesure selon les gatégories. Mais je dois automatiser afin de garder la collecte deja fait. je veux aussi avoir la possibilité de collecter des postes selon plusieur catégories, c'est a dire que je dois être capable de données une dictionnaire au model pour qu'il puisse générer des mots clés. 
+
+
+ca se peux que je recupere des post en italien 
+
+
+
