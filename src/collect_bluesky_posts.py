@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from db.posts_db import save_posts_db
+from db_postgresql.posts_db import save_posts_db
 
 if __name__ == "__main__":
     USERNAME_BLUESKY = os.getenv("USERNAME_BLUESKY")
