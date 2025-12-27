@@ -14,6 +14,29 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 
 def create_tables():
+    """
+    Crée le schéma `bluesky` et les tables associées dans PostgreSQL, en supprimant 
+    d'abord les tables existantes si elles existent.
+
+    Tables créées :
+        - categories : Contient les catégories uniques.
+        - keywords : Contient les mots-clés liés aux catégories.
+        - posts : Contient les posts récupérés de Bluesky.
+        - post_keywords : Table d'association entre posts et mots-clés.
+
+    Notes :
+        - La table `posts` contient une contrainte unique sur `(external_id, content)` 
+          pour éviter les doublons.
+        - Les relations entre `keywords` et `categories`, ainsi que `post_keywords`, 
+          sont assurées via des clés étrangères.
+        - Les tables sont créées dans le schéma `bluesky`.
+
+    Exceptions levées :
+        - psycopg2.OperationalError : En cas d'erreur de connexion à la base de données.
+        - Exception : Pour toute autre erreur durant la création du schéma ou des tables.
+
+    :return: None
+    """
     try:
         # Connexion à la base PostgreSQL
         conn = psycopg2.connect(
@@ -80,6 +103,12 @@ def create_tables():
             PRIMARY KEY(post_id, keyword_id)
         );
         """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS scanned_posts (
+                external_id TEXT PRIMARY KEY
+            );
+            """)
 
         conn.commit()
 

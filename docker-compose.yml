@@ -1,40 +1,37 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      # --- VARIABLES REQUISES PAR L'IMAGE POSTGRES (à GAUCHE) ---
-      POSTGRES_USER: ${DB_USER}       
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}       # ✅ Correct : Utilise votre DB_NAME pour créer la base
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data/postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"] 
-      interval: 5s
-      timeout: 5s
-      retries: 5
-  
-  app:
+  collector:
     build: .
+    container_name: bsky_collector
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app  # Synchronise votre code local avec le conteneur
+    command: python -m src.collect.main
     depends_on:
       db:
         condition: service_healthy
+
+  db:
+    image: postgres:15
+    container_name: content-monitoring-db-1
+    env_file:
+      - .env
     environment:
-      # --- VOS VARIABLES POUR LE CODE PYTHON (à GAUCHE) ---
-      DB_HOST: db                  # L'hôte est le nom du service 'db'
-      DB_PORT: 5432                
-      DB_NAME: ${DB_NAME}          # ✅ Correct : Python lira os.getenv("DB_NAME")
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      
-      USERNAME_BLUESKY: ${USERNAME_BLUESKY}
-      PASSWORD_BLUESKY: ${PASSWORD_BLUESKY}
-      
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432" # Permet d'accéder à la DB depuis Windows (localhost:5432)
     volumes:
-      - .:/app
-    command: python main.py
+      - postgres_data:/var/lib/postgresql/data # Stocke les données sur votre disque dur
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data: # Déclare le volume pour la persistance des données

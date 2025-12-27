@@ -7,11 +7,13 @@ requires-python = ">=3.13"
 dependencies = [
     "atproto>=0.0.65",
     "beartype>=0.22.9",
+    "helium>=5.1.2",
     "ollama>=0.6.1",
     "pandas>=2.3.3",
     "polars>=1.36.1",
     "psycopg2>=2.9.11",
     "python-dotenv>=1.2.1",
+    "spacy>=3.8.11",
 ]
 
 [project.scripts]
