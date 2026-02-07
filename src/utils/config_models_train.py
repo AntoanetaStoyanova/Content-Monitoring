@@ -1,13 +1,14 @@
 # src/utils/config_models_train.py
 # pour l'entraînement du modèle
 """Configuration centralisée pour tous les modèles"""
+
 from pathlib import Path
 
 # ============================================================
 # PATHS - Adapté à ta structure
 # ============================================================
 BASE_PATH = Path(__file__).parent.parent.parent  # Remonte à content-monitoring/
-DATA_PATH = BASE_PATH / "data" / "kaggle"
+DATA_PATH = BASE_PATH / "src" / "data" / "version2_7classes_en"
 MODELS_ARTIFACTS_PATH = BASE_PATH / "src" / "model_train" / "artifacts"
 NOTEBOOKS_PATH = BASE_PATH / "src" / "model_train"
 
