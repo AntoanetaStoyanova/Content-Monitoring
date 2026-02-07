@@ -3,28 +3,53 @@ name = "content-monitoring"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+
+requires-python = ">=3.11,<3.13"
+
+
+
 dependencies = [
+    "accelerate>=0.26",
     "atproto>=0.0.65",
     "beartype>=0.22.9",
+    "datasets>=4.4.2",
+    "emoji>=2.15.0",
+    "faiss-cpu>=1.13.2",
     "helium>=5.1.2",
+    "ipykernel>=7.1.0",
+    "langdetect>=1.0.9",
+    "matplotlib>=3.10.8",
+    "nltk>=3.9.2",
     "ollama>=0.6.1",
     "pandas>=2.3.3",
     "polars>=1.36.1",
     "psycopg2>=2.9.11",
     "python-dotenv>=1.2.1",
+    "scikit-learn>=1.8.0",
+    "seaborn>=0.13.2",
+    "sentence-transformers>=5.2.0",
     "spacy>=3.8.11",
+    "torch>=2.9.1",
+    "transformers>=4.57.3",
+    "unidecode>=1.4.0",
+    "xgboost>=3.1.2",
+    "imbalanced-learn>=0.12",
 ]
 
-[project.scripts]
-scraping_powerbi = "src.__main__:main"
  
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
 
 # -------------------------------
 # Configuration Ruff
 # -------------------------------
 [tool.ruff]
-target-version = "py313"
+target-version = "py311"
 fix = true
 line-length = 88
 indent-width = 4
@@ -65,7 +90,7 @@ source = ["src"]
 branch = true
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 88
 show_missing = true
 exclude_lines = [
     "if __name__ == .__main__.:",
@@ -76,7 +101,7 @@ skip_empty = true
 
  
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.11"
 strict = true
 
 [dependency-groups]
