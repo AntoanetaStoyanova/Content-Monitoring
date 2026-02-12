@@ -128,3 +128,12 @@ src/
 ```bash
 python src/collect/main.py
 ```
+
+
+### Model train
+src/model_train/
+
+Le modèle est entraîné sur **Kaggle** afin de bénéficier du **GPU gratuit**.  
+Toutes les explications sur le cheminement et l'entraînement du modèle se trouvent dans :  
+`src\model_train\roberta-train-7-labels-en-version3-kaggle.ipynb`
+
